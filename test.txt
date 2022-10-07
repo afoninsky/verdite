@@ -1,0 +1,30 @@
+/**
+npm install -g ts-node typescript '@types/node'
+npm install -g anyproxy
+anyproxy --intercept --ignore-unauthorized-ssl --rule *.js
+
+https_proxy=127.0.0.1:8080 curl -k -X POST "https://httpbin.org/anything?qwe=asd"
+http_proxy=127.0.0.1:8080 curl -X POST "http://httpbin.org/anything?qwe=asd"
+
+
+https_proxy=127.0.0.1:8080 curl -k -X POST -H "Content-Type: application/json" -d @data.json "https://httpbin.org/anything?qwe=asd"
+
+ */
+
+// {
+//     protocol: 'http',
+//     url: 'http://anyproxy.io/',
+//     requestOptions: {
+//       hostname: 'anyproxy.io',
+//       port: 80,
+//       path: '/',
+//       method: 'GET',
+//       headers: {
+//         Host: 'anyproxy.io',
+//         'Proxy-Connection': 'keep-alive',
+//         'User-Agent': '...'
+//       }
+//     },
+//     requestData: '...',
+//     _req: { /* ... */}
+//   }

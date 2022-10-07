@@ -1,0 +1,19 @@
+{
+    "status": "firing",
+    "receiver": "webhook",
+    "alerts": [
+        {
+        "labels": {
+            "alertname": "DummyTestAlert",
+            "cluster": "bplatform-eu-nl-prod-d",
+            "severity": "critical",
+            "visibility": "team"
+        },
+        "annotations": {
+            "alert_name_tmpl": "kubernetes.$cluster.$alertname.$severity",
+            "description": "test alert"
+        },
+        "startsAt": "2022-07-07T12:00:24.285256+02:00"
+        }
+    ]
+}
