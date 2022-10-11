@@ -22,7 +22,7 @@ export class Interceptor {
     this.config = Object.assign({}, configDefaults, userConfig);
   }
 
-  async addRule(path: string) {
+  addRule(path: string) {
     const rule = require(path);
     this.rules.push(rule);
   }
@@ -30,7 +30,7 @@ export class Interceptor {
   async start() {
     this.rules.sort(sortByPriority);
 
-    // await this.addRule("./rules_system/health");
+    this.addRule("./rules_system/local");
 
     for (const rule of this.rules) {
       if (rule.onStart) {
@@ -41,6 +41,7 @@ export class Interceptor {
     this.proxy = new ProxyServer({
       port: this.config.port,
       forceProxyHttps: true,
+      // silent: true,
       dangerouslyIgnoreUnauthorized: true,
       rule: this.createRulesWrapper(),
     });
