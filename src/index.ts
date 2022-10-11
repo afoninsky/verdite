@@ -1,11 +1,13 @@
-import { ProxyServer, RuleModule } from "anyproxy";
-import { sortByPriority, errorResponse } from "./helpers";
 import {
-  InterceptorOptions,
-  Rule,
+  ProxyServer,
+  RuleModule,
   RequestDetail,
   ResponseDetail,
-} from "./interface";
+} from "anyproxy";
+import { sortByPriority, errorResponse } from "./helpers";
+import { InterceptorOptions, Rule, Request, Response } from "./interface";
+
+export { Request, Response, Rule, InterceptorOptions };
 
 const configDefaults = {
   port: 8080,
@@ -13,8 +15,8 @@ const configDefaults = {
 
 export class Interceptor {
   private config: InterceptorOptions;
-  private rules: Rule[];
-  private proxy: ProxyServer;
+  private rules: Rule[] = [];
+  private proxy!: ProxyServer;
 
   constructor(userConfig?: InterceptorOptions) {
     this.config = Object.assign({}, configDefaults, userConfig);
@@ -27,6 +29,9 @@ export class Interceptor {
 
   async start() {
     this.rules.sort(sortByPriority);
+
+    // await this.addRule("./rules_system/health");
+
     for (const rule of this.rules) {
       if (rule.onStart) {
         await rule.onStart();
@@ -47,44 +52,65 @@ export class Interceptor {
   // - http://anyproxy.io/en/#beforesendrequest
   // - http://anyproxy.io/en/#beforesendresponse
   private createRulesWrapper(): RuleModule {
+    const self = this;
     return {
-      beforeSendRequest(req: RequestDetail | any): Promise<any> {
+      beforeSendRequest(proxyReq: RequestDetail): Promise<any> {
         return new Promise(async (resolve) => {
-          for (const rule of this.rules) {
+          const { protocol, url, requestOptions, requestData } = proxyReq;
+          const request: Request = {
+            protocol,
+            url,
+            requestOptions,
+            requestData,
+          };
+
+          for (const rule of self.rules) {
             if (!rule.beforeSendRequest) {
               continue;
             }
             try {
-              await rule.beforeSendRequest(req);
+              await rule.beforeSendRequest(request);
             } catch (err) {
-              console.log(err.message || err);
+              console.log(err); // TODO: better logging
               errorResponse(err);
             }
             // finish further processing if some rule already set response
-            if (req.response) {
+            if (request.response) {
               break;
             }
           }
-          resolve(req);
+          Object.assign(proxyReq, request);
+          resolve(proxyReq);
         });
       },
       beforeSendResponse(
-        req: RequestDetail,
-        res: ResponseDetail
+        proxyReq: RequestDetail,
+        proxyRes: ResponseDetail
       ): Promise<any> {
         return new Promise(async (resolve) => {
-          for (const rule of this.rules) {
+          const { protocol, url, requestOptions, requestData } = proxyReq;
+          const request: Request = {
+            protocol,
+            url,
+            requestOptions,
+            requestData,
+          };
+          const { statusCode, header, body } = proxyRes.response;
+          const response: Response = { statusCode, header, body };
+
+          for (const rule of self.rules) {
             if (!rule.beforeSendResponse) {
               continue;
             }
             try {
-              await rule.beforeSendResponse(req, res);
+              await rule.beforeSendResponse(request, response);
             } catch (err) {
-              console.log(err.message || err);
+              console.log(err);
               return resolve(errorResponse(err));
             }
           }
-          resolve(res);
+          Object.assign(proxyRes, { response });
+          resolve(proxyRes);
         });
       },
     };
