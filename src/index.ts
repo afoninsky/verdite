@@ -57,6 +57,10 @@ export class Interceptor {
     });
   }
 
+  async close(): Promise<void> {
+    return this.proxy.close();
+  }
+
   // create a generic wrapper compatible with AnyProxy format
   // following methods can be used in rules:
   // - http://anyproxy.io/en/#beforesendrequest
