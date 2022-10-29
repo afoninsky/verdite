@@ -4,6 +4,8 @@ import {
   RequestDetail,
   ResponseDetail,
 } from "anyproxy";
+import { resolve } from "path";
+import { existsSync } from "fs";
 import { sortByPriority, errorResponse } from "./helpers";
 import { InterceptorOptions, Rule, Request, Response } from "./interface";
 
@@ -22,8 +24,14 @@ export class Interceptor {
     this.config = Object.assign({}, configDefaults, userConfig);
   }
 
-  addRule(path: string) {
-    const rule = require(path);
+  addRule(name: string) {
+    const path = resolve(process.cwd(), name);
+    let rule: Rule;
+    if (existsSync(path)) {
+      rule = require(path);
+    } else {
+      rule = require(name);
+    }
     this.rules.push(rule);
   }
 
