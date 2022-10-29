@@ -1,0 +1,5 @@
+apiVersion: skaffold/v3alpha1
+kind: Config
+build:
+  artifacts:
+    - image: afoninsky/verdite

@@ -35,7 +35,7 @@ export class Interceptor {
     this.rules.push(rule);
   }
 
-  async start() {
+  async start(): Promise<void> {
     this.rules.sort(sortByPriority);
 
     for (const rule of this.rules) {
@@ -51,7 +51,10 @@ export class Interceptor {
       dangerouslyIgnoreUnauthorized: true,
       rule: this.createRulesWrapper(),
     });
-    this.proxy.start();
+    return new Promise((resolve) => {
+      this.proxy.on("ready", () => resolve());
+      this.proxy.start();
+    });
   }
 
   // create a generic wrapper compatible with AnyProxy format

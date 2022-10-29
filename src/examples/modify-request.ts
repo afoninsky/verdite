@@ -1,6 +1,6 @@
 // curl -k -v -X POST -H "Content-Type: application/json" -d @./examples/payload.json "https://httpbin.org/anything?qwe=asd"
 
-import { Request, Response } from "../src";
+import { Request, Response } from "..";
 import { URL } from "url";
 
 /**

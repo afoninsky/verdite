@@ -1,14 +1,19 @@
 {
+  "main": "dst/index.js",
   "dependencies": {
-    "anyproxy": "^4.1.3"
-  },
-  "scripts": {
-    "dev": "nodemon"
-  },
-  "devDependencies": {
     "@types/anyproxy": "^4.1.2",
     "@types/glob": "^8.0.0",
+    "anyproxy": "^4.1.3",
+    "ts-node": "^10.9.1"
+  },
+  "scripts": {
+    "start": "ts-node src/start.ts",
+    "start:dev": "nodemon",
+    "build": "rimraf ./dst && tsc"
+  },
+  "devDependencies": {
     "nodemon": "^2.0.20",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2"
   }
 }

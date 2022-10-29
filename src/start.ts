@@ -1,9 +1,6 @@
-import { resolve } from "path";
 const { PROXY_HTTP_PORT = "8080", PROXY_RULES = "" } = process.env;
 
-process.chdir(process.cwd());
-
-import { Interceptor } from "./src";
+import { Interceptor } from ".";
 
 const server = new Interceptor({
   port: PROXY_HTTP_PORT,
@@ -17,4 +14,6 @@ PROXY_RULES.split(",")
     server.addRule(rule);
   });
 
-server.start();
+server.start().then(() => {
+  console.log("Proxy server started on port", PROXY_HTTP_PORT);
+});
