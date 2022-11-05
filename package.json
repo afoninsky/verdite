@@ -1,31 +1,24 @@
 {
   "main": "dst/index.js",
   "dependencies": {
-    "@types/anyproxy": "^4.1.2",
-    "@types/glob": "^8.0.0",
     "anyproxy": "^4.1.3",
     "ts-node": "^10.9.1"
   },
   "scripts": {
     "start": "ts-node src/start.ts",
     "start:dev": "nodemon",
-    "test": "mocha -r ts-node/register src/**/*.spec.ts",
-    "_coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
-    "build": "rimraf ./dst && tsc"
+    "test": "mocha -r ts-node/register src/**/*.spec.ts"
   },
   "devDependencies": {
+    "@types/anyproxy": "^4.1.2",
+    "@types/glob": "^8.0.0",
     "@types/chai": "^4.3.3",
     "@types/mocha": "^10.0.0",
-    "@types/superagent-proxy": "^3.0.0",
-    "@types/supertest": "^2.0.12",
+    "axios": "^1.1.3",
     "chai": "^4.3.6",
-    "chai-http": "^4.3.0",
     "mocha": "^10.1.0",
     "nodemon": "^2.0.20",
     "nyc": "^15.1.0",
-    "prettier": "^2.7.1",
-    "rimraf": "^3.0.2",
-    "superagent-proxy": "^3.0.0",
-    "supertest": "^6.3.1"
+    "prettier": "^2.7.1"
   }
 }

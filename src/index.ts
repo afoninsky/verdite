@@ -24,15 +24,16 @@ export class Interceptor {
     this.config = Object.assign({}, configDefaults, userConfig);
   }
 
-  addRule(name: string) {
-    const path = resolve(process.cwd(), name);
-    let rule: Rule;
-    if (existsSync(path)) {
-      rule = require(path);
-    } else {
-      rule = require(name);
+  // load rule for interceptor
+  addRule(rule: string | Rule) {
+    // rule is already loaded module
+    if (typeof rule !== "string") {
+      return this.rules.push(rule);
     }
-    this.rules.push(rule);
+    // load rule from file or npm module
+    const path = resolve(process.cwd(), rule);
+    const loadedRule = existsSync(path) ? require(path) : require(rule);
+    this.rules.push(loadedRule);
   }
 
   async start(): Promise<void> {

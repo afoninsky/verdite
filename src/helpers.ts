@@ -1,8 +1,14 @@
 import { Rule } from "./interface";
 
 export function sortByPriority(a: Rule, b: Rule): number {
-  if (a.priority > b.priority) return -1;
-  if (a.priority < b.priority) return 1;
+  const p1 = a.priority || 1;
+  const p2 = b.priority || 1;
+  if (p1 > p2) {
+    return -1;
+  }
+  if (p1 < p2) {
+    return 1;
+  }
   return 0;
 }
 

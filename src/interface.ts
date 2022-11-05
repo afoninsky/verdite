@@ -19,8 +19,8 @@ export interface InterceptorOptions {
 }
 
 export interface Rule {
-  priority: number;
-  onStart(): Promise<any>;
-  beforeSendRequest(request: Request): Promise<Request>;
-  beforeSendResponse(request: Request, response: Response): Promise<Response>;
+  priority?: number;
+  onStart?(): Promise<any>;
+  beforeSendRequest?(request: Request): Promise<Request>;
+  beforeSendResponse?(request: Request, response: Response): Promise<Response>;
 }
